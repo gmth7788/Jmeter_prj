@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="设计状态配置-结构树-对配套结构进行全部展开" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="基线-右侧列表-展示配套产品信息列表" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -85,6 +85,31 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="script">import com.a5.A5Login;
+
+String htmldata = prev.getResponseDataAsString();
+
+String enc_time=A5Login.getSplitStr(htmldata,&quot;var evalue = \&quot;&quot;,&quot;\&quot;&quot;,1);
+String enc_get=A5Login.getSplitStr(htmldata,&quot;document.ToolsView.getString(true, \&quot;&quot;,&quot;\&quot;&quot;,1);
+String enc_random=A5Login.getSplitStr(htmldata,&quot;java.util.Random@&quot;,&quot;\&quot;&quot;,1);
+enc_random=&quot;java.util.Random@&quot;+enc_random;
+
+String userid =vars.get(&quot;userid&quot;);
+
+String enc_send = A5Login.getA5EncStr(true,enc_get,enc_time,userid,userid);
+
+
+vars.put(&quot;enctime&quot;,enc_time);
+vars.put(&quot;encvalue&quot;,enc_send);
+vars.put(&quot;enc_random&quot;,enc_random);
+
+System.out.println(userid)</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
@@ -120,32 +145,6 @@
             </objProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
-          <hashTree/>
-          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <boolProp name="resetInterpreter">false</boolProp>
-            <stringProp name="script">import com.a5.A5Login;
-
-String htmldata = prev.getResponseDataAsString();
-
-String enc_time=A5Login.getSplitStr(htmldata,&quot;var evalue = \&quot;&quot;,&quot;\&quot;&quot;,1);
-String enc_get=A5Login.getSplitStr(htmldata,&quot;document.ToolsView.getString(true, \&quot;&quot;,&quot;\&quot;&quot;,1);
-String enc_random=A5Login.getSplitStr(htmldata,&quot;java.util.Random@&quot;,&quot;\&quot;&quot;,1);
-enc_random=&quot;java.util.Random@&quot;+enc_random;
-
-String userid =vars.get(&quot;userid&quot;);
-
-String enc_send = A5Login.getA5EncStr(true,enc_get,enc_time,userid,userid);
-
-
-vars.put(&quot;enctime&quot;,enc_time);
-vars.put(&quot;encvalue&quot;,enc_send);
-vars.put(&quot;enc_random&quot;,enc_random);
-
-System.out.println(userid)
-</stringProp>
-          </BeanShellPostProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="userloginservlet" enabled="true">
@@ -472,15 +471,29 @@ System.out.println(userid)
           <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="data_get_for_tree.jsp_1" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="data_get.jsp_1" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="id" elementType="HTTPArgument">
+                <elementProp name="sortOrder" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">CangDuan%3A3c98f909bc78000</stringProp>
+                  <stringProp name="Argument.value">asc</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">id</stringProp>
+                  <stringProp name="Argument.name">sortOrder</stringProp>
+                </elementProp>
+                <elementProp name="sort" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">NUMBER</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">sort</stringProp>
+                </elementProp>
+                <elementProp name="dir" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">asc</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">dir</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -488,7 +501,7 @@ System.out.println(userid)
             <stringProp name="HTTPSampler.port"></stringProp>
             <stringProp name="HTTPSampler.protocol">http</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/avidm/plm/common/grid/control/data_get_for_tree.jsp?spot=browseDesignEntityBom&amp;spotInstance=browseDesignEntityBom&amp;id=CangDuan:3c98f909bc78000</stringProp>
+            <stringProp name="HTTPSampler.path">/avidm/plm/common/grid/control/data_get.jsp?spot=listBomBaselines&amp;spotInstance=listBomBaselines</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
@@ -543,16 +556,6 @@ System.out.println(userid)
               </objProp>
               <stringProp name="filename"></stringProp>
             </ResultCollector>
-            <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="响应断言" enabled="true">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="-92729744">SJPT_SB_01_2000</stringProp>
-              </collectionProp>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-              <boolProp name="Assertion.assume_success">false</boolProp>
-              <intProp name="Assertion.test_type">16</intProp>
-            </ResponseAssertion>
             <hashTree/>
           </hashTree>
           <kg.apc.jmeter.vizualizers.CorrectedResultCollector guiclass="kg.apc.jmeter.vizualizers.TransactionsPerSecondGui" testclass="kg.apc.jmeter.vizualizers.CorrectedResultCollector" testname="jp@gc - Transactions per Second" enabled="true">
